@@ -1,0 +1,7 @@
+# Ignore these files in build context
+Dockerfile
+.dockerignore
+.git
+.gitignore
+README.md
+*.tar.gz
