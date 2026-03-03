@@ -27,6 +27,8 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 # Copy the .conf in the html directory
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+# Enable WordPress debugging by modifying wp-config after first run
+RUN sed -i "/^\/\* That's all, stop editing/ i \define('WP_DEBUG', true);\ndefine('WP_DEBUG_LOG', true);\ndefine('WP_DEBUG_DISPLAY', true);" /var/www/html/wp-config.php || true
 
 #Create the folder to enable php start
 RUN mkdir /run/php
