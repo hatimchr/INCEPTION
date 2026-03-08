@@ -1,0 +1,64 @@
+
+services:
+   nginx:
+     build: requirements/nginx/.
+     container_name: nginx
+     image: nginx
+     ports:
+        - "443:443"
+     volumes:
+        - volumeWordPress:/var/www/html
+     networks:
+        inception:
+     env_file: .env
+
+   wordpress:
+      build: requirements/wordpress/.
+      container_name: wordpress
+      image: wordpress
+      volumes:
+         - volumeWordPress:/var/www/html
+      networks:
+         inception:
+      env_file: .env
+      environment:
+        - DB_NAME=$DB_NAME
+        - DB_USER=$DB_USER
+        - DB_PASS=$DB_PASS
+        - WP_ADMIN_USER=$WP_ADMIN_USER
+        - WP_ADMIN_PASS=$WP_ADMIN_PASS
+        - WP_ADMIN_EMAIL=$WP_ADMIN_EMAIL
+        - WP_USER=$WP_USER
+        - WP_USER_PASS=$WP_USER_PASS
+        - WP_USER_EMAIL=$WP_USER_EMAIL
+        - WP_URL=$WP_URL
+
+   mariadb:
+      build: requirements/mariadb/.
+      container_name: mariadb
+      image: mariadb
+      volumes:
+         - volumeDatabase:/var/lib/mysql
+      networks:
+         inception:
+      env_file: .env
+      environment:
+        - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+        - MYSQL_DATABASE=$DB_NAME
+        - MYSQL_USER=$DB_USER
+        - MYSQL_PASSWORD=$DB_PASS
+
+volumes:
+  volumeWordPress:
+    driver_opts:
+      type: none
+      device: /home/hchair/data/WordPress/
+      o: bind
+  #driver: /home/hchair/data/WordPress/
+  volumeDatabase:
+    driver_opts:
+      type: none
+      device: /home/hchair/data/Database/
+      o: bind
+networks:
+      inception:
